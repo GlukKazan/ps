@@ -555,7 +555,6 @@ declare
   l_flag     boolean;
   columns    record;
 begin
-
   select id into l_snapshot
   from   ps_table
   where  lower(name) = lower(p_snapshot);
@@ -592,7 +591,7 @@ begin
 
   perform ps_trigger_regenerate(l_table);
 
-  l_sql := 'create table ' || p_snaphot || ' (';
+  l_sql := 'create table ' || p_snapshot || ' (';
   l_flag := FALSE;
   for columns in
     select name, type_name
@@ -664,7 +663,7 @@ begin
      execute l_sql;
   end if;
 
-  l_sql := 'insert into ' || p_snaphot || '(';
+  l_sql := 'insert into ' || p_snapshot || '(';
   l_flag := FALSE;
   for columns in
     select name
