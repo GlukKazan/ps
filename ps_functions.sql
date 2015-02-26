@@ -83,7 +83,7 @@ begin
              columns.name || ' = coalesce(NEW.' || columns.parent_name || ', 0)';
           end if;
         end loop;
-      l_sql := l_sql || '; ' ||
+      l_sql := l_sql || chr(59) || ' ' ||
      'if not FOUND then ' ||
      'insert into ' || tabs.table_name || '(';
       l_flag = FALSE;
@@ -119,8 +119,8 @@ begin
              l_sql := l_sql || 'NEW.' || columns.parent_name;
           end if;
         end loop;
-      l_sql := l_sql || '); ' ||
-     'end if; ';
+      l_sql := l_sql || ') ' || chr(59) || ' ' ||
+     'end if' || chr(59) || ' ';
     end loop;
     select name into l_date_column
     from   ps_column
@@ -136,13 +136,13 @@ begin
       loop
         l_sql := l_sql ||
        'if NEW.' || l_date_column || ' >= to_date(''' || tabs.start_value || ''', ''YYYYMMDD'') and NEW.' || l_date_column || ' < to_date(''' || tabs.end_value || ''', ''YYYYMMDD'') then ' ||
-          'insert into ' || l_table_name || '_' || tabs.start_value || ' values (NEW.*); ' ||
-          'return null; ' ||
-       'end if; ';
+          'insert into ' || l_table_name || '_' || tabs.start_value || ' values (NEW.*)' || chr(59) || ' ' ||
+          'return null' || chr(59) || ' ' ||
+       'end if' || chr(59) || ' ';
       end loop;
   l_sql := l_sql ||
- 'return NEW; '||
- 'end; '||
+ 'return NEW' || chr(59) || ' '||
+ 'end' || chr(59) || ' '||
  '$'||'$ language plpgsql';
   execute l_sql;
 
@@ -150,8 +150,8 @@ begin
  'create or replace function ps_' || l_table_name || '_raise_trigger() returns trigger ' ||
  'as $'|| '$ ' ||
  'begin ' ||
-   'raise EXCEPTION ''Can''''t support % on MIN or MAX aggregate'', TG_OP;' ||
- 'end; '||
+   'raise EXCEPTION ''Can''''t support % on MIN or MAX aggregate'', TG_OP' || chr(59) ||
+ 'end' || chr(59) || ' '||
  '$'||'$ language plpgsql';
   execute l_sql;
 
@@ -214,11 +214,11 @@ begin
              columns.name || ' = coalesce(NEW.' || columns.parent_name || ', 0)';
           end if;
         end loop;
-      l_sql := l_sql || '; ';
+      l_sql := l_sql || chr(59) || ' ';
     end loop;
   l_sql := l_sql ||
- 'return null; '||
- 'end; '||
+ 'return null' || chr(59) || ' '||
+ 'end' || chr(59) || ' '||
  '$'||'$ language plpgsql';
   execute l_sql;
 
@@ -283,11 +283,11 @@ begin
              columns.name || ' = coalesce(NEW.' || columns.parent_name || ', 0)';
           end if;
         end loop;
-      l_sql := l_sql || '; ';
+      l_sql := l_sql || chr(59) || ' ';
     end loop;
   l_sql := l_sql ||
- 'return null; '||
- 'end; '||
+ 'return null' || chr(59) || ' '||
+ 'end' || chr(59) || ' '||
  '$'||'$ language plpgsql';
   execute l_sql;
 end;
